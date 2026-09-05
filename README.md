@@ -27,6 +27,15 @@ src/
 - **Validación con Zod.** Usa Zod para formularios, contratos de API y validación de entradas de servidor.
 - **Estado del servidor con TanStack Query.** Las lecturas y mutaciones de datos se gestionan mediante hooks de React Query para mantener la UI sincronizada.
 
+## Base de datos (Supabase externo)
+
+El proyecto está conectado a una **instancia externa de Supabase** gestionada por el usuario, no a Lovable Cloud.
+
+- Cliente único: `src/lib/supabase.ts` (impórtalo con `import { supabase } from "@/lib/supabase"`).
+- Las credenciales son la URL del proyecto y la clave **publishable/anon** (públicas por diseño; la seguridad la aplica Row Level Security).
+- No uses `@/integrations/supabase/client`: ese módulo autogenerado pertenece a la integración gestionada y ya no es la fuente de verdad.
+- Las migraciones SQL y las políticas RLS se aplican directamente sobre tu instancia (SQL Editor o CLI de Supabase).
+
 ## Scripts
 
 ```sh
