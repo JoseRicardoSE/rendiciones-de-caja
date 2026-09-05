@@ -33,7 +33,7 @@ El proyecto está conectado a una **instancia externa de Supabase** gestionada p
 
 - Cliente único: `src/lib/supabase.ts` (impórtalo con `import { supabase } from "@/lib/supabase"`).
 - Las credenciales son la URL del proyecto y la clave **publishable/anon** (públicas por diseño; la seguridad la aplica Row Level Security).
-- No uses `@/integrations/supabase/client`: ese módulo autogenerado pertenece a la integración gestionada y ya no es la fuente de verdad.
+- Los módulos autogenerados de la integración gestionada (`@/integrations/supabase/`) fueron eliminados; solo se conserva `types.ts` como contenedor del tipo `Database`, que puedes regenerar desde tu instancia con `supabase gen types typescript`.
 - Las migraciones SQL y las políticas RLS se aplican directamente sobre tu instancia (SQL Editor o CLI de Supabase).
 
 ## Scripts
