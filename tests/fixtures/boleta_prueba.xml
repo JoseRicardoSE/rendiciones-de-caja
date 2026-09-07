@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<DTE version="1.0" xmlns="http://www.sii.cl/SiiDte">
+  <Documento ID="F100230">
+    <Encabezado>
+      <IdDoc>
+        <TipoDTE>33</TipoDTE>
+        <Folio>100230</Folio>
+        <FchEmis>2026-09-07</FchEmis>
+      </IdDoc>
+      <Emisor>
+        <RUTEmisor>76.543.210-K</RUTEmisor>
+        <RznSoc>Restaurante El Cafetín SpA</RznSoc>
+        <GiroEmis>Servicios de Restaurante</GiroEmis>
+      </Emisor>
+      <Receptor>
+        <RUTRecep>12.345.678-9</RUTRecep>
+        <RznSocRecep>Tu Empresa S.A.</RznSocRecep>
+      </Receptor>
+      <Totales>
+        <MntNeto>13025</MntNeto>
+        <TasaIVA>19</TasaIVA>
+        <IVA>2475</IVA>
+        <MntTotal>15500</MntTotal>
+      </Totales>
+    </Encabezado>
+    <Detalle>
+      <NroLinDet>1</NroLinDet>
+      <NmbItem>Almuerzo Ejecutivo</NmbItem>
+      <QtyItem>1</QtyItem>
+      <PrcItem>13025</PrcItem>
+      <MontoItem>13025</MontoItem>
+    </Detalle>
+  </Documento>
+</DTE>

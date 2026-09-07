@@ -10,33 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BorradoresRouteImport } from './routes/borradores'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as MisRendicionesRouteImport } from './routes/mis-rendiciones'
+import { Route as NuevaRendicionRouteImport } from './routes/nueva-rendicion'
+import { Route as AdminCentrosCostoRouteImport } from './routes/admin/centros-costo'
+import { Route as AdminInformesRouteImport } from './routes/admin/informes'
+import { Route as AdminRendicionesRouteImport } from './routes/admin/rendiciones'
+import { Route as AdminUsuariosRouteImport } from './routes/admin/usuarios'
+import { Route as RendicionIdRouteImport } from './routes/rendicion.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BorradoresRoute = BorradoresRouteImport.update({
+  id: '/borradores',
+  path: '/borradores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MisRendicionesRoute = MisRendicionesRouteImport.update({
+  id: '/mis-rendiciones',
+  path: '/mis-rendiciones',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NuevaRendicionRoute = NuevaRendicionRouteImport.update({
+  id: '/nueva-rendicion',
+  path: '/nueva-rendicion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCentrosCostoRoute = AdminCentrosCostoRouteImport.update({
+  id: '/admin/centros-costo',
+  path: '/admin/centros-costo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminInformesRoute = AdminInformesRouteImport.update({
+  id: '/admin/informes',
+  path: '/admin/informes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRendicionesRoute = AdminRendicionesRouteImport.update({
+  id: '/admin/rendiciones',
+  path: '/admin/rendiciones',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/admin/usuarios',
+  path: '/admin/usuarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RendicionIdRoute = RendicionIdRouteImport.update({
+  id: '/rendicion/$id',
+  path: '/rendicion/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/borradores': typeof BorradoresRoute
+  '/login': typeof LoginRoute
+  '/mis-rendiciones': typeof MisRendicionesRoute
+  '/nueva-rendicion': typeof NuevaRendicionRoute
+  '/admin/centros-costo': typeof AdminCentrosCostoRoute
+  '/admin/informes': typeof AdminInformesRoute
+  '/admin/rendiciones': typeof AdminRendicionesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/rendicion/$id': typeof RendicionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/borradores': typeof BorradoresRoute
+  '/login': typeof LoginRoute
+  '/mis-rendiciones': typeof MisRendicionesRoute
+  '/nueva-rendicion': typeof NuevaRendicionRoute
+  '/admin/centros-costo': typeof AdminCentrosCostoRoute
+  '/admin/informes': typeof AdminInformesRoute
+  '/admin/rendiciones': typeof AdminRendicionesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/rendicion/$id': typeof RendicionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/borradores': typeof BorradoresRoute
+  '/login': typeof LoginRoute
+  '/mis-rendiciones': typeof MisRendicionesRoute
+  '/nueva-rendicion': typeof NuevaRendicionRoute
+  '/admin/centros-costo': typeof AdminCentrosCostoRoute
+  '/admin/informes': typeof AdminInformesRoute
+  '/admin/rendiciones': typeof AdminRendicionesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/rendicion/$id': typeof RendicionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/borradores'
+    | '/login'
+    | '/mis-rendiciones'
+    | '/nueva-rendicion'
+    | '/admin/centros-costo'
+    | '/admin/informes'
+    | '/admin/rendiciones'
+    | '/admin/usuarios'
+    | '/rendicion/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/borradores'
+    | '/login'
+    | '/mis-rendiciones'
+    | '/nueva-rendicion'
+    | '/admin/centros-costo'
+    | '/admin/informes'
+    | '/admin/rendiciones'
+    | '/admin/usuarios'
+    | '/rendicion/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/borradores'
+    | '/login'
+    | '/mis-rendiciones'
+    | '/nueva-rendicion'
+    | '/admin/centros-costo'
+    | '/admin/informes'
+    | '/admin/rendiciones'
+    | '/admin/usuarios'
+    | '/rendicion/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BorradoresRoute: typeof BorradoresRoute
+  LoginRoute: typeof LoginRoute
+  MisRendicionesRoute: typeof MisRendicionesRoute
+  NuevaRendicionRoute: typeof NuevaRendicionRoute
+  AdminCentrosCostoRoute: typeof AdminCentrosCostoRoute
+  AdminInformesRoute: typeof AdminInformesRoute
+  AdminRendicionesRoute: typeof AdminRendicionesRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+  RendicionIdRoute: typeof RendicionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +169,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/borradores': {
+      id: '/borradores'
+      path: '/borradores'
+      fullPath: '/borradores'
+      preLoaderRoute: typeof BorradoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mis-rendiciones': {
+      id: '/mis-rendiciones'
+      path: '/mis-rendiciones'
+      fullPath: '/mis-rendiciones'
+      preLoaderRoute: typeof MisRendicionesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nueva-rendicion': {
+      id: '/nueva-rendicion'
+      path: '/nueva-rendicion'
+      fullPath: '/nueva-rendicion'
+      preLoaderRoute: typeof NuevaRendicionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/centros-costo': {
+      id: '/admin/centros-costo'
+      path: '/admin/centros-costo'
+      fullPath: '/admin/centros-costo'
+      preLoaderRoute: typeof AdminCentrosCostoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/informes': {
+      id: '/admin/informes'
+      path: '/admin/informes'
+      fullPath: '/admin/informes'
+      preLoaderRoute: typeof AdminInformesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/rendiciones': {
+      id: '/admin/rendiciones'
+      path: '/admin/rendiciones'
+      fullPath: '/admin/rendiciones'
+      preLoaderRoute: typeof AdminRendicionesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/admin/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rendicion/$id': {
+      id: '/rendicion/$id'
+      path: '/rendicion/$id'
+      fullPath: '/rendicion/$id'
+      preLoaderRoute: typeof RendicionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BorradoresRoute: BorradoresRoute,
+  LoginRoute: LoginRoute,
+  MisRendicionesRoute: MisRendicionesRoute,
+  NuevaRendicionRoute: NuevaRendicionRoute,
+  AdminCentrosCostoRoute: AdminCentrosCostoRoute,
+  AdminInformesRoute: AdminInformesRoute,
+  AdminRendicionesRoute: AdminRendicionesRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
+  RendicionIdRoute: RendicionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
