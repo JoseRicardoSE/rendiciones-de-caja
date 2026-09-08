@@ -52,7 +52,7 @@ export function AdminDashboard() {
     const buckets: { key: string; name: string; total: number }[] = [];
     for (let i = 7; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      buckets.push({ key: `${d.getFullYear()}-${d.getMonth()}`, name: meses[d.getMonth()], total: 0 });
+      buckets.push({ key: `${d.getFullYear()}-${d.getMonth()}`, name: meses[d.getMonth()] ?? "", total: 0 });
     }
 
     let totalMes = 0;
