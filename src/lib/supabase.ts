@@ -12,8 +12,11 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "http://127.0.0.1:54321";
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH";
+// IMPORTANTE: no leer estas variables desde import.meta.env. La plataforma
+// inyecta VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY apuntando a su
+// propia instancia gestionada, lo que rompía el login. Se fijan explícitamente.
+const SUPABASE_URL = "https://aqvyuchhwcwulgvxbesd.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_IWHTFc8vWW1hw8ohWN0kEQ_ppibCh9S";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
