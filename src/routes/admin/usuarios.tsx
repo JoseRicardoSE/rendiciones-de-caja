@@ -117,11 +117,11 @@ function AdminUsuariosScreen() {
         
         const usuariosAImportar = [];
         for (let i = 1; i < lines.length; i++) {
-          const row = lines[i].split(',');
+          const row = (lines[i] ?? "").split(',');
           if (row.length >= 2) {
             usuariosAImportar.push({
-              email: row[0].trim(),
-              password: row[1].trim(),
+              email: (row[0] ?? "").trim(),
+              password: (row[1] ?? "").trim(),
               nombre_completo: row[2] ? row[2].trim() : "",
               cargo: row[3] ? row[3].trim() : "Colaborador",
             });

@@ -60,7 +60,7 @@ function BorradoresScreen() {
       const total = (gastos || []).reduce((acc, curr) => acc + curr.monto, 0);
       result.push({
         ...r,
-        centros_costo: r.centros_costo as {nombre: string},
+        centros_costo: r.centros_costo as unknown as {nombre: string},
         _count: gastos?.length || 0,
         _total: total
       });

@@ -67,8 +67,8 @@ function AdminTodasRendicionesScreen() {
       result.push({
         ...r,
         estado: r.estado as any,
-        profiles: r.profiles as {nombre_completo: string},
-        centros_costo: r.centros_costo as {nombre: string},
+        profiles: r.profiles as unknown as {nombre_completo: string},
+        centros_costo: r.centros_costo as unknown as {nombre: string},
         _total: total
       });
     }

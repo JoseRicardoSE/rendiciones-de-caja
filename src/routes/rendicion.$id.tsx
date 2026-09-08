@@ -31,6 +31,7 @@ type Rendicion = {
   periodo: string;
   estado: string;
   comentario_admin: string | null;
+  id_usuario?: string;
   centros_costo: { nombre: string } | null;
   profiles: { nombre_completo: string } | null;
 };
@@ -98,20 +99,20 @@ function RendicionDetailScreen() {
       .eq("id_rendicion", id)
       .order("fecha", { ascending: false });
 
-    if (gasData) setGastos(gasData);
+    if (gasData) setGastos(gasData as unknown as Gasto[]);
     setLoading(false);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      setFile(e.target.files[0] ?? null);
     }
   };
 
   const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve((reader.result as string).split(',')[1]);
+    reader.onload = () => resolve((reader.result as string).split(',')[1] ?? "");
     reader.onerror = error => reject(error);
   });
 
@@ -159,7 +160,7 @@ function RendicionDetailScreen() {
   const handleAddGasto = async (e: React.FormEvent) => {
     e.preventDefault();
     const montoNum = Number(gastoForm.monto);
-    if (montoNum <= 0) return toast.error("El monto debe ser mayor a cero");
+    if (montoNum <= 0) { toast.error("El monto debe ser mayor a cero"); return; }
     
     setIsSaving(true);
     try {
@@ -199,7 +200,7 @@ function RendicionDetailScreen() {
   };
 
   const handleEnviarRevision = async () => {
-    if (gastos.length === 0) return toast.error("No puedes enviar una rendición vacía.");
+    if (gastos.length === 0) { toast.error("No puedes enviar una rendición vacía."); return; }
     if (!confirm("¿Estás seguro de enviar esta rendición? Ya no podrás editarla.")) return;
     const { error } = await supabase.from("rendiciones").update({ estado: "enviada" }).eq("id", id);
     if (error) toast.error("Error al enviar: " + error.message);

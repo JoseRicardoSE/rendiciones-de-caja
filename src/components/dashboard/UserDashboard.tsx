@@ -53,7 +53,7 @@ export function UserDashboard() {
 
     const pieData = Object.keys(categoriasMap).map(k => ({
       name: k,
-      value: categoriasMap[k]
+      value: categoriasMap[k] ?? 0
     })).sort((a,b) => b.value - a.value).slice(0, 5); // Top 5 categorías
 
     setChartData(pieData);
