@@ -91,7 +91,7 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(stats.totalRendidoMes)}</div>
-            <p className="text-xs text-slate-500">Agosto 2026</p>
+            <p className="text-xs text-slate-500 capitalize">{mesActual}</p>
           </CardContent>
         </Card>
         
