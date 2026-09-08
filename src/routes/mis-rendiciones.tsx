@@ -61,7 +61,7 @@ function MisRendicionesScreen() {
       result.push({
         ...r,
         estado: r.estado as any,
-        centros_costo: r.centros_costo as {nombre: string},
+        centros_costo: r.centros_costo as unknown as {nombre: string},
         _count: gastos?.length || 0,
         _total: total
       });

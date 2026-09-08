@@ -58,7 +58,7 @@ function NuevaRendicionScreen() {
           .eq("id_usuario", profile.id);
           
         const asignadosIds = asignaciones?.map(a => a.id_centro_costo) || [];
-        setCentros(centrosData.filter(c => asignadosIds.includes(c.id)) as CentroCosto[]);
+        setCentros(centrosData.filter((c: any) => asignadosIds.includes(c.id)) as CentroCosto[]);
       }
     };
     fetchCentros();
