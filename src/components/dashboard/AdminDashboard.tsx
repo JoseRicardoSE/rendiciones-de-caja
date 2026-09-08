@@ -27,20 +27,42 @@ export function AdminDashboard() {
     // 3. Pendientes (En revisión)
     const { count: pCount } = await supabase.from("rendiciones").select("*", { count: "exact", head: true }).eq("estado", "enviada");
     
-    // 4. Total rendido este mes (aprobadas)
-    // Para simplificar el SQL en cliente, traemos las aprobadas y sumamos sus gastos localmente.
-    // En producción se usaría una función RPC.
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0,0,0,0);
-    
-    const { data: rends } = await supabase.from("rendiciones").select("id").eq("estado", "aprobada").gte("created_at", startOfMonth.toISOString());
-    let totalMes = 0;
+    // 4. Total rendido este mes (aprobadas) y evolución real de los últimos 8 meses
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startWindow = new Date(now.getFullYear(), now.getMonth() - 7, 1);
+
+    const { data: rends } = await supabase
+      .from("rendiciones")
+      .select("id, created_at")
+      .eq("estado", "aprobada")
+      .gte("created_at", startWindow.toISOString());
+
+    const gastosPorRendicion: Record<string, number> = {};
     if (rends && rends.length > 0) {
-      const ids = rends.map(r => r.id);
-      const { data: gastos } = await supabase.from("gastos").select("monto").in("id_rendicion", ids);
-      totalMes = (gastos || []).reduce((acc, curr) => acc + curr.monto, 0);
+      const ids = rends.map((r: any) => r.id);
+      const { data: gastos } = await supabase.from("gastos").select("id_rendicion, monto").in("id_rendicion", ids);
+      (gastos || []).forEach((g: any) => {
+        gastosPorRendicion[g.id_rendicion] = (gastosPorRendicion[g.id_rendicion] || 0) + Number(g.monto || 0);
+      });
     }
+
+    // Acumular por mes
+    const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+    const buckets: { key: string; name: string; total: number }[] = [];
+    for (let i = 7; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      buckets.push({ key: `${d.getFullYear()}-${d.getMonth()}`, name: meses[d.getMonth()], total: 0 });
+    }
+
+    let totalMes = 0;
+    (rends || []).forEach((r: any) => {
+      const monto = gastosPorRendicion[r.id] || 0;
+      const d = new Date(r.created_at);
+      const bucket = buckets.find((b) => b.key === `${d.getFullYear()}-${d.getMonth()}`);
+      if (bucket) bucket.total += monto;
+      if (d >= startOfMonth) totalMes += monto;
+    });
 
     setStats({
       totalRendidoMes: totalMes,
@@ -49,18 +71,11 @@ export function AdminDashboard() {
       centrosActivos: cCount || 0,
     });
 
-    // Mock Chart Data for UI (se podría calcular real agrupando por mes)
-    setChartData([
-      { name: "Ene", total: Math.floor(Math.random() * 5000000) },
-      { name: "Feb", total: Math.floor(Math.random() * 5000000) },
-      { name: "Mar", total: Math.floor(Math.random() * 5000000) },
-      { name: "Abr", total: Math.floor(Math.random() * 5000000) },
-      { name: "May", total: Math.floor(Math.random() * 5000000) },
-      { name: "Jun", total: Math.floor(Math.random() * 5000000) },
-      { name: "Jul", total: Math.floor(Math.random() * 5000000) },
-      { name: "Ago", total: totalMes || 2400000 },
-    ]);
+    setChartData(buckets.map((b) => ({ name: b.name, total: b.total })));
   };
+
+  const mesActual = new Intl.DateTimeFormat("es-CL", { month: "long", year: "numeric" }).format(new Date());
+
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(amount);
