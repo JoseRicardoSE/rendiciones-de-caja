@@ -1,55 +1,92 @@
-# CRUD Scaffold
+# Rendiciones de Gastos
 
-Proyecto base mínimo sobre **TanStack Start** pensado para construir un CRUD simple. No incluye pantallas de negocio ni funcionalidad concreta: solo una estructura de carpetas clara, escalable y lista para continuar.
+Aplicación web para la gestión de rendiciones de gastos y cajas, construida con tecnologías modernas y desplegada en Lovable.
+
+🚀 **Sitio en producción:** [https://rendiciones-gastos.lovable.app](https://rendiciones-gastos.lovable.app)
+
+## Características principales
+
+El sistema digitaliza y audita el proceso de rendición de gastos corporativos, soportando los siguientes flujos principales:
+
+- **Roles de Usuario:**
+  - **Colaborador:** Puede crear rendiciones (sobres), adjuntar comprobantes en estado borrador, enviar a revisión y corregir rendiciones rechazadas.
+  - **Administrador:** Dispone de una bandeja centralizada para auditar, aprobar o rechazar rendiciones (con comentarios). Gestiona el personal y los Centros de Costo.
+- **Flujo de Estados (Máquina de Estados):**
+  - Soporte para ciclo de vida completo: `borrador` ➔ `enviada` ➔ `aprobada` / `rechazada`.
+- **Control Presupuestario:** Asignación de presupuestos por Centro de Costo con reportes de saldo ejecutado vs. presupuestado.
+- **Seguridad y Auditoría:** Políticas RLS (Row Level Security) para proteger comprobantes, reglas de validación (inmutabilidad financiera para estados aprobados) y "Soft Delete" de usuarios.
+
+## Stack Tecnológico
+
+Este proyecto está construido con un stack moderno y escalable:
+
+- **Framework:** [TanStack Start](https://tanstack.com/start/latest) con React
+- **Estilos:** [Tailwind CSS](https://tailwindcss.com/) v4
+- **Componentes UI:** [shadcn/ui](https://ui.shadcn.com/) y Radix UI
+- **Manejo de Estado (Server State):** [TanStack Query](https://tanstack.com/query/latest)
+- **Base de Datos & Backend:** [Supabase](https://supabase.com/)
+- **Validación de datos:** [Zod](https://zod.dev/)
+
+## Arquitectura y Diseño Técnico
+
+El sistema está diseñado con una arquitectura de cliente enriquecido que se comunica directamente con Supabase (BaaS), delegando la seguridad y validación al nivel de la base de datos (PostgreSQL).
+
+- **Dashboards y Gráficos:** Visualización de métricas y KPIs (uso de presupuesto, usuarios) implementados con `recharts`.
+- **Exportaciones Nativas:** Capacidad de exportar reportes a Excel/CSV y vistas optimizadas para imprimir en PDF.
+
+## Esquema de Base de Datos (Supabase)
+
+El modelo de datos relacional consta de las siguientes entidades principales:
+
+1. **`profiles`:** Gestión de usuarios (vinculado a `auth.users`). Define el rol (`administrador`, `usuario`) y el estado.
+2. **`centros_costo`:** Agrupadores contables con un `presupuesto` asignado.
+3. **`asignaciones_centro`:** Relación (N:M) que determina qué usuarios (`profiles`) tienen acceso para rendir en qué `centros_costo`.
+4. **`rendiciones` (Maestro):** Reporte general de un usuario hacia un centro de costo. Mantiene el control del ciclo de vida (`estado`) y un `folio` identificador.
+5. **`gastos` (Detalle):** Cada comprobante o boleta individual. Guarda detalles como `monto`, `fecha`, `categoria` y el enlace (`documento_url`) al bucket de Storage.
+
+> **Almacenamiento Seguro (Storage):** Los comprobantes se suben a un bucket dedicado (`boletas`), aislados en subcarpetas por `auth.uid()` y protegidos mediante políticas RLS.
 
 ## Estructura de carpetas
 
 ```text
 src/
-  api/            # Funciones de servidor y endpoints de TanStack Start
+  api/            # Funciones de servidor y endpoints
   components/
     shared/       # Componentes reutilizables propios de la aplicación
-    ui/           # Componentes de interfaz de shadcn/ui
-  db/             # Esquemas, tipos y migraciones de base de datos
+    ui/           # Componentes de interfaz estandarizados (shadcn/ui)
+  db/             # Esquemas, tipos y configuración de base de datos
   entities/       # Modelos de dominio, esquemas Zod y validaciones
-  hooks/          # Hooks de React compartidos (fetch, mutaciones, UI)
-  lib/            # Utilidades y configuración global
-  routes/         # Rutas basadas en archivos de TanStack Start
-  services/       # Capa de acceso a datos / clientes API
+  hooks/          # Hooks personalizados de React (fetch, mutaciones, UI)
+  lib/            # Utilidades compartidas y configuración global (ej. cliente supabase)
+  routes/         # Definición de rutas basadas en archivos (TanStack Start)
+  services/       # Capa de acceso a datos y lógica de negocio
   types/          # Tipos globales de TypeScript
 ```
 
-## Convenciones básicas
+## Desarrollo Local
 
-- **Una entidad, una carpeta.** Cada modelo del dominio vive en `src/entities/<nombre>/` y contiene su schema Zod, tipos y, opcionalmente, hooks específicos.
-- **Rutas como puntos de entrada.** Las páginas en `src/routes/` solo orquestan: obtienen datos a través de `src/hooks/` o `src/services/` y delegan la UI a componentes.
-- **Componentes reutilizables.** Los componentes de negocio compartidos van en `src/components/shared/`. Los de `src/components/ui/` pertenecen a shadcn/ui y se mantienen tal cual.
-- **Validación con Zod.** Usa Zod para formularios, contratos de API y validación de entradas de servidor.
-- **Estado del servidor con TanStack Query.** Las lecturas y mutaciones de datos se gestionan mediante hooks de React Query para mantener la UI sincronizada.
+### Requisitos previos
+- [Bun](https://bun.sh/) (Runtime rápido de JavaScript y gestor de paquetes)
+- Una instancia de [Supabase](https://supabase.com/)
 
-## Base de datos (Supabase externo)
+### Instalación y ejecución
 
-El proyecto está conectado a una **instancia externa de Supabase** gestionada por el usuario, no a Lovable Cloud.
+1. Asegúrate de estar en el directorio del proyecto y de haber clonado el código base.
+2. Instala las dependencias:
+   ```sh
+   bun install
+   ```
+3. Configura las variables de entorno. Asegúrate de tener tu archivo `.env.local` configurado con las credenciales correctas de Supabase (URL y clave anon pública).
+4. Inicia el servidor de desarrollo local:
+   ```sh
+   bun dev
+   ```
+5. Abre [http://localhost:5173](http://localhost:5173) en tu navegador (el puerto puede variar dependiendo de Vite).
 
-- Cliente único: `src/lib/supabase.ts` (impórtalo con `import { supabase } from "@/lib/supabase"`).
-- Las credenciales son la URL del proyecto y la clave **publishable/anon** (públicas por diseño; la seguridad la aplica Row Level Security).
-- Los módulos autogenerados de la integración gestionada (`@/integrations/supabase/`) fueron eliminados; solo se conserva `types.ts` como contenedor del tipo `Database`, que puedes regenerar desde tu instancia con `supabase gen types typescript`.
-- Las migraciones SQL y las políticas RLS se aplican directamente sobre tu instancia (SQL Editor o CLI de Supabase).
-
-## Scripts
+### Scripts adicionales útiles
 
 ```sh
-bun dev      # Servidor de desarrollo
-bun build    # Build de producción
-bun lint     # Lint con ESLint
-bun format   # Formatear con Prettier
+bun build    # Genera el build optimizado para producción
+bun lint     # Revisa el código con ESLint
+bun format   # Formatea el código automáticamente usando Prettier
 ```
-
-## Próximos pasos
-
-1. Define tu primera entidad en `src/entities/<nombre>/`.
-2. Crea el schema de base de datos en `src/db/schema.ts` o mediante migraciones de Lovable Cloud.
-3. Añade rutas en `src/routes/` para listar, crear, editar y eliminar registros.
-4. Implementa los servicios en `src/services/` y los hooks en `src/hooks/`.
-
-Para más detalles sobre rutas, consulta `src/routes/README.md`.
