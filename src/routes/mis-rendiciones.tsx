@@ -88,6 +88,60 @@ function MisRendicionesScreen() {
     }
   };
 
+  const estadoLabel = (estado: string) =>
+    estado === "enviada" ? "En Revisión" : estado === "aprobada" ? "Aprobada" : estado === "rechazada" ? "Rechazada" : estado;
+
+  const filtered = historial.filter((r) => statusFilter === "todas" || r.estado === statusFilter);
+
+  const exportCSV = () => {
+    if (filtered.length === 0) return toast.error("No hay datos para exportar");
+    const rows = [
+      ["Folio", "Título", "Centro de Costo", "Estado", "Total"],
+      ...filtered.map((r) => [
+        `RND-${r.folio}`,
+        r.titulo,
+        r.centros_costo?.nombre ?? "",
+        estadoLabel(r.estado),
+        String(r._total),
+      ]),
+    ];
+    const csv = rows.map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `mis-rendiciones-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportPDF = () => {
+    if (filtered.length === 0) return toast.error("No hay datos para exportar");
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text("Mis Rendiciones", 14, 16);
+    doc.setFontSize(10);
+    doc.text(
+      `Estado: ${statusFilter === "todas" ? "Todos" : estadoLabel(statusFilter)} — ${new Date().toLocaleDateString("es-CL")}`,
+      14,
+      22,
+    );
+    autoTable(doc, {
+      startY: 28,
+      head: [["Folio", "Título", "Centro de Costo", "Estado", "Total"]],
+      body: filtered.map((r) => [
+        `RND-${r.folio}`,
+        r.titulo,
+        r.centros_costo?.nombre ?? "",
+        estadoLabel(r.estado),
+        formatCurrency(r._total),
+      ]),
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [37, 99, 235] },
+    });
+    doc.save(`mis-rendiciones-${new Date().toISOString().slice(0, 10)}.pdf`);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -98,6 +152,29 @@ function MisRendicionesScreen() {
       </div>
 
       <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+        <div className="p-4 border-b flex flex-wrap items-center gap-3">
+          <div className="w-[200px]">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="h-8">
+                <SelectValue placeholder="Estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todas">Todos los estados</SelectItem>
+                <SelectItem value="aprobada">Aprobadas</SelectItem>
+                <SelectItem value="enviada">En Revisión</SelectItem>
+                <SelectItem value="rechazada">Rechazadas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="ml-auto flex gap-2">
+            <Button variant="outline" size="sm" onClick={exportCSV}>
+              <Download className="mr-1 h-4 w-4" /> CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={exportPDF}>
+              <FileDown className="mr-1 h-4 w-4" /> PDF
+            </Button>
+          </div>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
