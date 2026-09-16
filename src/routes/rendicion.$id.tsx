@@ -103,50 +103,6 @@ function RendicionDetailScreen() {
     setLoading(false);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0] ?? null);
-    }
-  };
-
-  const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve((reader.result as string).split(',')[1] ?? "");
-    reader.onerror = error => reject(error);
-  });
-
-  const handleAnalyzeFile = async () => {
-    if (!file) return;
-    setIsAnalyzing(true);
-    const toastId = toast.loading("Analizando boleta con Inteligencia Artificial...");
-    
-    try {
-      const base64Image = await toBase64(file);
-      
-      const { data, error } = await supabase.functions.invoke('ocr', {
-        body: { base64Image, mimeType: file.type }
-      });
-
-      if (error) throw new Error(error.message);
-      if (data.error) throw new Error(data.error);
-
-      // Autocompletar form
-      setGastoForm({
-        ...gastoForm,
-        fecha: data.fecha || gastoForm.fecha,
-        monto: data.monto ? String(data.monto) : gastoForm.monto,
-        categoria: data.categoria || gastoForm.categoria,
-        descripcion: data.descripcion || gastoForm.descripcion,
-      });
-
-      toast.success("¡Datos extraídos con éxito!", { id: toastId });
-    } catch (err: any) {
-      toast.error("No se pudo analizar la boleta: " + err.message, { id: toastId });
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
 
   const uploadFile = async (): Promise<string | null> => {
     if (!file || !user) return null;
