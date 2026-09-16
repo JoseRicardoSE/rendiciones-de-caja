@@ -191,14 +191,14 @@ function MisRendicionesScreen() {
               <TableRow>
                 <TableCell colSpan={6} className="text-center h-24 text-slate-500">Cargando...</TableCell>
               </TableRow>
-            ) : historial.length === 0 ? (
+            ) : filtered.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center h-32 text-slate-500">
                   No has enviado ninguna rendición todavía.
                 </TableCell>
               </TableRow>
             ) : (
-              historial.map((r) => (
+              filtered.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-medium text-slate-600">RND-{r.folio}</TableCell>
                   <TableCell className="font-semibold">{r.titulo}</TableCell>
