@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Upload, FileText, Send, Trash2, CheckCircle, XCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, Plus, Upload, FileText, Send, Trash2, CheckCircle, XCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -57,7 +57,7 @@ function RendicionDetailScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
   const [rechazoComentario, setRechazoComentario] = useState("");
   const [emailPreview, setEmailPreview] = useState<string | null>(null);
   
