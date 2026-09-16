@@ -31,11 +31,6 @@ export function SidebarNav() {
               <List className="h-4 w-4" /> Mis Rendiciones
             </Link>
           </li>
-          <li>
-            <Link to="/" className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors">
-              <FileText className="h-4 w-4" /> Mis Informes
-            </Link>
-          </li>
         </>
       )}
 
