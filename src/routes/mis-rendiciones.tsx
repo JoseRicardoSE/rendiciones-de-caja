@@ -94,7 +94,7 @@ function MisRendicionesScreen() {
   const filtered = historial.filter((r) => statusFilter === "todas" || r.estado === statusFilter);
 
   const exportCSV = () => {
-    if (filtered.length === 0) return toast.error("No hay datos para exportar");
+    if (filtered.length === 0) { toast.error("No hay datos para exportar"); return; }
     const rows = [
       ["Folio", "Título", "Centro de Costo", "Estado", "Total"],
       ...filtered.map((r) => [
@@ -116,7 +116,7 @@ function MisRendicionesScreen() {
   };
 
   const exportPDF = () => {
-    if (filtered.length === 0) return toast.error("No hay datos para exportar");
+    if (filtered.length === 0) { toast.error("No hay datos para exportar"); return; }
     const doc = new jsPDF();
     doc.setFontSize(14);
     doc.text("Mis Rendiciones", 14, 16);
