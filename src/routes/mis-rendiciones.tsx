@@ -31,6 +31,7 @@ function MisRendicionesScreen() {
   const navigate = useNavigate();
   const [historial, setHistorial] = useState<RendicionHistorial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("todas");
 
   useEffect(() => {
     if (!user) return;
