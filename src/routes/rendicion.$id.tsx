@@ -393,19 +393,8 @@ function RendicionDetailScreen() {
               <Input value={gastoForm.descripcion} onChange={e => setGastoForm({...gastoForm, descripcion: e.target.value})} required />
             </div>
             <div className="space-y-2 pt-2 border-t mt-2">
-              <Label>Comprobante (Opcional pero recomendado para IA)</Label>
-              <div className="flex gap-2 items-center">
-                <Input type="file" onChange={handleFileChange} accept="image/*,.pdf" />
-                <Button 
-                  type="button" 
-                  variant="secondary" 
-                  disabled={!file || isAnalyzing} 
-                  onClick={handleAnalyzeFile}
-                  className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200"
-                >
-                  <Sparkles className="h-4 w-4 mr-1" /> {isAnalyzing ? "Leyendo..." : "Autocompletar"}
-                </Button>
-              </div>
+              <Label>Comprobante (Opcional, cualquier tipo de archivo)</Label>
+              <Input type="file" onChange={handleFileChange} />
             </div>
             <DialogFooter className="mt-4">
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
