@@ -103,6 +103,11 @@ function RendicionDetailScreen() {
     setLoading(false);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0] ?? null);
+    }
+  };
 
   const uploadFile = async (): Promise<string | null> => {
     if (!file || !user) return null;
