@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Upload, FileText, Send, Trash2, CheckCircle, XCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, Plus, Upload, FileText, Send, Trash2, CheckCircle, XCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -57,7 +57,7 @@ function RendicionDetailScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
   const [rechazoComentario, setRechazoComentario] = useState("");
   const [emailPreview, setEmailPreview] = useState<string | null>(null);
   
@@ -106,45 +106,6 @@ function RendicionDetailScreen() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0] ?? null);
-    }
-  };
-
-  const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve((reader.result as string).split(',')[1] ?? "");
-    reader.onerror = error => reject(error);
-  });
-
-  const handleAnalyzeFile = async () => {
-    if (!file) return;
-    setIsAnalyzing(true);
-    const toastId = toast.loading("Analizando boleta con Inteligencia Artificial...");
-    
-    try {
-      const base64Image = await toBase64(file);
-      
-      const { data, error } = await supabase.functions.invoke('ocr', {
-        body: { base64Image, mimeType: file.type }
-      });
-
-      if (error) throw new Error(error.message);
-      if (data.error) throw new Error(data.error);
-
-      // Autocompletar form
-      setGastoForm({
-        ...gastoForm,
-        fecha: data.fecha || gastoForm.fecha,
-        monto: data.monto ? String(data.monto) : gastoForm.monto,
-        categoria: data.categoria || gastoForm.categoria,
-        descripcion: data.descripcion || gastoForm.descripcion,
-      });
-
-      toast.success("¡Datos extraídos con éxito!", { id: toastId });
-    } catch (err: any) {
-      toast.error("No se pudo analizar la boleta: " + err.message, { id: toastId });
-    } finally {
-      setIsAnalyzing(false);
     }
   };
 
@@ -437,19 +398,8 @@ function RendicionDetailScreen() {
               <Input value={gastoForm.descripcion} onChange={e => setGastoForm({...gastoForm, descripcion: e.target.value})} required />
             </div>
             <div className="space-y-2 pt-2 border-t mt-2">
-              <Label>Comprobante (Opcional pero recomendado para IA)</Label>
-              <div className="flex gap-2 items-center">
-                <Input type="file" onChange={handleFileChange} accept="image/*,.pdf" />
-                <Button 
-                  type="button" 
-                  variant="secondary" 
-                  disabled={!file || isAnalyzing} 
-                  onClick={handleAnalyzeFile}
-                  className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200"
-                >
-                  <Sparkles className="h-4 w-4 mr-1" /> {isAnalyzing ? "Leyendo..." : "Autocompletar"}
-                </Button>
-              </div>
+              <Label>Comprobante (Opcional, cualquier tipo de archivo)</Label>
+              <Input type="file" onChange={handleFileChange} />
             </div>
             <DialogFooter className="mt-4">
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
